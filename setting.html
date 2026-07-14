@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAISAR AI - Configuration Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="app-layout" style="display: flex; justify-content: center; align-items: center;">
+        <div class="settings-card" style="width: 100%; max-width: 550px; padding: 2rem; background: rgba(10, 17, 40, 0.75); backdrop-filter: blur(10px); border: 1px solid var(--primary-glow); border-radius: 12px; box-shadow: 0 0 20px rgba(0,174,239,0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,174,239,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <h2 style="font-family: 'Orbitron'; color: #00AEEF;"><i class="fas fa-sliders-h"></i> Customization</h2>
+                <a href="index.html" style="color: #fff; text-decoration: none;"><i class="fas fa-arrow-left"></i> Save & Exit</a>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; color: #fff;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>Synthesis Language</label>
+                    <select id="user-setting-lang" style="background: #020617; border: 1px solid rgba(0,174,239,0.4); color: #fff; padding: 0.5rem; border-radius: 6px; outline: none;">
+                        <option value="en-US">English (Global)</option>
+                        <option value="bn-BD">Bangla (Bangladesh)</option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>Speaking Pace</label>
+                    <input type="range" id="user-setting-speed" min="0.5" max="2.0" step="0.1" value="1.0" style="accent-color: #00AEEF;">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>Voice Volume</label>
+                    <input type="range" id="user-setting-volume" min="0" max="1.0" step="0.1" value="0.9" style="accent-color: #00AEEF;">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>Render Optimization</label>
+                    <select id="user-setting-quality" style="background: #020617; border: 1px solid rgba(0,174,239,0.4); color: #fff; padding: 0.5rem; border-radius: 6px; outline: none;">
+                        <option value="high">High Definition Render</option>
+                        <option value="low">Optimized Performance</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="firebase.js"></script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            if (!user) window.location.href = "login.html";
+        });
+
+        // Sync inputs directly with localStorage cache values
+        const configLang = document.getElementById('user-setting-lang');
+        const configSpeed = document.getElementById('user-setting-speed');
+        const configVolume = document.getElementById('user-setting-volume');
+        const configQuality = document.getElementById('user-setting-quality');
+
+        configLang.value = localStorage.getItem('vLanguage') || 'en-US';
+        configSpeed.value = localStorage.getItem('vSpeed') || '1.0';
+        configVolume.value = localStorage.getItem('vVolume') || '0.9';
+        configQuality.value = localStorage.getItem('vQuality') || 'high';
+
+        configLang.addEventListener('change', (e) => localStorage.setItem('vLanguage', e.target.value));
+        configSpeed.addEventListener('input', (e) => localStorage.setItem('vSpeed', e.target.value));
+        configVolume.addEventListener('input', (e) => localStorage.setItem('vVolume', e.target.value));
+        configQuality.addEventListener('change', (e) => {
+            localStorage.setItem('vQuality', e.target.value);
+            alert("Environmental adjustment will load on the next console startup.");
+        });
+    </script>
+</body>
+</html>

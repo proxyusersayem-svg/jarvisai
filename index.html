@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAISAR TALKING AI - Premium Virtual Assistant</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- External Libraries (Three.js, GSAP, Firebase Compat) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Firebase Legacy/Compat SDKs for simplified dynamic execution -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <!-- 1. SPLASH SCREEN -->
+    <div id="splash-screen" class="overlay-screen active">
+        <div class="glow-logo-container">
+            <h1 class="logo-text">KAISAR</h1>
+            <div class="loader-ring"></div>
+            <p class="loader-sub">Initializing Neuro-Core Systems...</p>
+        </div>
+    </div>
+
+    <!-- 2. WELCOME & AUTH SCREEN -->
+    <div id="auth-screen" class="overlay-screen">
+        <div class="auth-card glass-panel">
+            <div class="auth-tabs">
+                <button id="tab-login" class="tab-btn active">Sign In</button>
+                <button id="tab-signup" class="tab-btn">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <h2 class="form-title">Access AI Assistant</h2>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email Address" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="neon-btn">INITIALIZE CONNECTION</button>
+                <button type="button" id="google-signin-btn" class="google-btn">
+                    <i class="fab fa-google"></i> Connect with Google
+                </button>
+                <p class="auth-helper">Forgot Password? <a href="#" id="trigger-forgot">Reset Neural Key</a></p>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form">
+                <h2 class="form-title">Synthesize New Profile</h2>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="signup-name" placeholder="Full Name" required autocomplete="name">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="signup-email" placeholder="Email Address" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signup-password" placeholder="Create Security Key" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="neon-btn">CREATE PROFILE</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. MAIN DASHBOARD -->
+    <main id="app-container" class="dashboard">
+        
+        <!-- Animated Natural Background Container -->
+        <div id="canvas-container"></div>
+
+        <!-- Top Futuristic Navigation Bar -->
+        <header class="top-nav glass-panel">
+            <div class="logo-area">
+                <span class="neon-indicator active"></span>
+                <h1>KAISAR <span class="accent-text">TALKING AI</span></h1>
+            </div>
+            <nav class="nav-links">
+                <button class="nav-btn active" data-target="home-section"><i class="fas fa-brain"></i> Assistant</button>
+                <button class="nav-btn" id="open-history-btn"><i class="fas fa-history"></i> Log Matrix</button>
+                <button class="nav-btn" id="open-settings-btn"><i class="fas fa-sliders-h"></i> Adaptations</button>
+                <button class="nav-btn" id="open-profile-btn"><i class="fas fa-user-astronaut"></i> Operator</button>
+                <button class="nav-btn logout" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Off</button>
+            </nav>
+        </header>
+
+        <!-- Right Side: Interaction & Chat Frame -->
+        <section class="control-panel glass-panel">
+            <div class="panel-header">
+                <h3><i class="fas fa-comments"></i> Cognitive Synapse</h3>
+                <span id="ai-status" class="status-badge">ONLINE</span>
+            </div>
+            
+            <div class="chat-viewport" id="chat-stream">
+                <div class="chat-bubble ai">
+                    <div class="bubble-content">
+                        Hello. I am KAISAR. System connection secured. How may I assist you today?
+                    </div>
+                    <span class="bubble-time">System Init</span>
+                </div>
+            </div>
+
+            <!-- Speech/Text User Input Bar -->
+            <div class="interaction-bar">
+                <div class="voice-wave-container" id="wave-visualizer">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                </div>
+                
+                <form id="chat-input-form" class="input-wrapper">
+                    <input type="text" id="user-text-input" placeholder="Type matrix coordinate or statement..." autocomplete="off">
+                    <button type="submit" class="send-btn" title="Send Directive"><i class="fas fa-paper-plane"></i></button>
+                </form>
+
+                <div class="hold-to-talk-wrapper">
+                    <button id="hold-mic-btn" class="mic-glow-btn" title="Hold space or click & hold to speak">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <span class="mic-label">HOLD TO TALK</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 4. MODALS (Settings, Profile, History) -->
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-wrapper">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3><i class="fas fa-sliders-h"></i> System Customization</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-row">
+                    <label for="set-language">Vocalization Language</label>
+                    <select id="set-language" class="glass-select">
+                        <option value="en-US">English (US)</option>
+                        <option value="bn-BD">Bangla (Bangladesh)</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="set-voice-speed">Speaking Rate</label>
+                    <input type="range" id="set-voice-speed" min="0.5" max="2" step="0.1" value="1.0">
+                </div>
+                <div class="setting-row">
+                    <label for="set-volume">Speech Volume</label>
+                    <input type="range" id="set-volume" min="0" max="1" step="0.1" value="0.9">
+                </div>
+                <div class="setting-row">
+                    <label for="set-quality">Render Environment Quality</label>
+                    <select id="set-quality" class="glass-select">
+                        <option value="high">High Definition</option>
+                        <option value="low">Optimized Performance</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-wrapper">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-astronaut"></i> Operator Registry</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body user-profile-details">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="info-field">
+                    <label>Identity Display Name</label>
+                    <p id="prof-name">Securing session info...</p>
+                </div>
+                <div class="info-field">
+                    <label>Assigned Interface Key</label>
+                    <p id="prof-email">Securing session info...</p>
+                </div>
+                <div class="info-field">
+                    <label>Identity Verification State</label>
+                    <p id="prof-status" class="text-accent">Authentic</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Log Modal -->
+    <div id="history-modal" class="modal-wrapper">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3><i class="fas fa-history"></i> Neural Logs</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="history-log-list">
+                <!-- Script-generated history rows injection points -->
+                <p class="empty-notif">Establishing Firestore database pipeline...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Controller Logic -->
+    <script src="js/app.js"></script>
+</body>
+</html>

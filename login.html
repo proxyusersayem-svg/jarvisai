@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAISAR AI - Core Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>KAISAR AI</h1>
+                <p>SECURE OPERATOR ACCESS</p>
+            </div>
+            <form id="login-form" class="form-container">
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email Address" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-btn">AUTHORIZE SESSION</button>
+            </form>
+            <div class="oauth-section">
+                <button id="google-btn" class="google-login"><i class="fab fa-google"></i> Connect via Google</button>
+            </div>
+            <div class="auth-footer">
+                <p>New operator? <a href="signup.html">Synthesize profile</a></p>
+                <p><a href="#" id="forgot-password">Recover Neural Key</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="firebase.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

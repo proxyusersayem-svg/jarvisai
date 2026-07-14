@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAISAR AI - Operator Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="app-layout" style="display: flex; justify-content: center; align-items: center;">
+        <div class="settings-card" style="width: 100%; max-width: 500px; padding: 2rem; background: rgba(10, 17, 40, 0.7); backdrop-filter: blur(10px); border: 1px solid var(--primary-glow); border-radius: 12px; box-shadow: 0 0 20px rgba(0,174,239,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,174,239,0.3); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <h2 style="font-family: 'Orbitron'; color: #00AEEF;"><i class="fas fa-user-astronaut"></i> Operator Info</h2>
+                <a href="index.html" style="color: #fff; text-decoration: none;"><i class="fas fa-arrow-left"></i> Console</a>
+            </div>
+            <div class="profile-details" style="display: flex; flex-direction: column; gap: 1.5rem; color: #fff;">
+                <div>
+                    <label style="color: #00AEEF; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">DISPLAY NAME</label>
+                    <p id="prof-display-name" style="font-size: 1.2rem; background: rgba(0,0,0,0.3); padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);"></p>
+                </div>
+                <div>
+                    <label style="color: #00AEEF; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">REGISTERED IDENTITY</label>
+                    <p id="prof-display-email" style="font-size: 1.1rem; background: rgba(0,0,0,0.3); padding: 0.6rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);"></p>
+                </div>
+                <button id="logout-profile-btn" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #fff; padding: 0.8rem; border-radius: 6px; cursor: pointer; font-family: 'Orbitron';">TERMINATE OPERATOR MATRIX</button>
+            </div>
+        </div>
+    </div>
+    <script src="firebase.js"></script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                document.getElementById('prof-display-name').textContent = user.displayName || "Operator Matrix";
+                document.getElementById('prof-display-email').textContent = user.email;
+            }
+        });
+        document.getElementById('logout-profile-btn').addEventListener('click', () => {
+            auth.signOut().then(() => { window.location.href = "login.html"; });
+        });
+    </script>
+</body>
+</html>
